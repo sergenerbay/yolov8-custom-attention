@@ -30,9 +30,11 @@ from ultralytics.nn.modules import (
     Bottleneck,
     BottleneckCSP,
     C2f,
+    C2fSimAm,
     CBAM,
     GAM,
     SKAttention,
+    SimAM,
     C2fAttn,
     C2fCIB,
     C2fPSA,
@@ -1626,6 +1628,7 @@ def parse_model(d, ch, verbose=True):
             C1,
             C2,
             C2f,
+            C2fSimAm,
             C3k2,
             RepNCSPELAN4,
             ELAN1,
@@ -1646,7 +1649,8 @@ def parse_model(d, ch, verbose=True):
             A2C2f,
             CBAM,
             GAM,
-            SKAttention
+            SKAttention,
+            SimAM,
         }
     )
     repeat_modules = frozenset(  # modules with 'repeat' arguments
@@ -1655,6 +1659,7 @@ def parse_model(d, ch, verbose=True):
             C1,
             C2,
             C2f,
+            C2fSimAm,
             C3k2,
             C2fAttn,
             C3,
