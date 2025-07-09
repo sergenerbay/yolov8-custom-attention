@@ -19,7 +19,7 @@ As a baseline, the FLIR thermal dataset is used for evaluation and benchmarking.
 
 ---
 
-## ⚙️ Example Configuration Block with SKAttention
+## ⚙️ Example Configuration Block with SKNet
 
 ```yaml
 - [-1, 1, SKAttention, [1024, [3, 5, 7], 16]]
