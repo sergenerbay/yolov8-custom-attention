@@ -571,20 +571,16 @@ class SKAttention(nn.Module):
         bs, c, _, _ = x.size()
         conv_outs = []
 
-        ### 1. Split - her kernel ile ayrı ayrı convolution
         for conv in self.convs:
-            conv_outs.append(conv(x))  # her biri (bs, c, h, w)
+            conv_outs.append(conv(x)) 
 
         feats = torch.stack(conv_outs, dim=0)  # (k, bs, c, h, w)
 
-        ### 2. Fuse - kernel’ların toplamı
         U = sum(conv_outs)  # (bs, c, h, w)
 
-        ### 3. Global Average Pooling + FC
         S = U.mean(-1).mean(-1)  # (bs, c)
         Z = self.fc(S)           # (bs, d)
 
-        ### 4. Her yol için ayrı FC → Ağırlık skorları
         weights = []
         for fc in self.fcs:
             w = fc(Z)  # (bs, c)
@@ -593,14 +589,10 @@ class SKAttention(nn.Module):
         attention_weights = torch.stack(weights, dim=0)  # (k, bs, c, 1, 1)
         attention_weights = self.softmax(attention_weights)  # softmax over kernels (dim=0)
 
-        ### 🔍 Hangi kernel önemli? Analiz
         with torch.no_grad():
             self.last_attention_weights = attention_weights.detach().cpu()
             mean_weights = self.last_attention_weights.mean(dim=[1, 2, 3, 4])  # (k,)
-            for i, w in enumerate(mean_weights):
-                print(f"Kernel {i}: Mean attention weight = {w.item():.4f}")
 
-        ### 5. Attention ağırlıkları ile yeniden ağırlıklı toplama
         V = (attention_weights * feats).sum(0)  # (bs, c, h, w)
 
         return V
