@@ -31,10 +31,8 @@ As a baseline, the FLIR thermal dataset is used for evaluation and benchmarking.
 
 ---
 ## ⚙️ Example Configuration Block with PSA
-
 ```yaml
 - [-1, 1, PSAPlug, [1024,4]]
-```
 ```
 
 - `1024` — Number of input/output channels  
