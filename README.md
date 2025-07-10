@@ -36,9 +36,7 @@ As a baseline, the FLIR thermal dataset is used for evaluation and benchmarking.
 ```
 
 - `1024` — Number of input/output channels  
-- `[3, 5, 7]` — Multi-scale kernel sizes for spatial attention  
-- `16` — Channel reduction ratio in the attention block  
-
+- `4` — Channel reduction ratio in the attention block  
 ---
 
 ## 🧪 Sample Training Script
