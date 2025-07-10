@@ -21,6 +21,7 @@ __all__ = (
     "ChannelAttention",
     "SpatialAttention",
     "CBAM",
+    "PSAPlug",
     "SKAttention",
     "SimAM",
     "GAM",
@@ -709,7 +710,54 @@ class SpatialAttention(nn.Module):
             (torch.Tensor): Spatial-attended output tensor.
         """
         return x * self.act(self.cv1(torch.cat([torch.mean(x, 1, keepdim=True), torch.max(x, 1, keepdim=True)[0]], 1)))
+class PSAPlug(nn.Module):
+    def __init__(self, channel=512,output=512,reduction=4, S=4):
+        super().__init__()
+        self.S = S
 
+        # Step1: SPC - farklı kernel boyutları
+        self.convs = nn.ModuleList([
+            nn.Conv2d(channel // S, channel // S, kernel_size=2 * (i + 1) + 1, padding=i + 1)
+            for i in range(S)
+        ])
+
+        # Step2: SE blokları - her scale için
+        self.se_blocks = nn.ModuleList([
+            nn.Sequential(
+                nn.AdaptiveAvgPool2d(1),
+                nn.Conv2d(channel // S, channel // (S * reduction), kernel_size=1, bias=False),
+                nn.ReLU(inplace=True),
+                nn.Conv2d(channel // (S * reduction), channel // S, kernel_size=1, bias=False),
+                nn.Sigmoid()
+            ) for i in range(S)
+        ])
+        # Step3: Softmax
+        self.softmax = nn.Softmax(dim=1)
+
+    def forward(self, x):
+        b, c, h, w = x.size()
+
+        # SPC modülü
+        SPC_out = x.view(b, self.S, c // self.S, h, w)  # bs,s,ci,h,w
+        SPC_list = []
+        for idx, conv in enumerate(self.convs):
+            SPC_list.append(conv(SPC_out[:, idx, :, :, :]))
+        SPC_out = torch.stack(SPC_list, dim=1)  # tekrar birleştiriyoruz
+        # SE ağırlıkları
+        se_out = []
+        for idx, se in enumerate(self.se_blocks):
+            se_out.append(se(SPC_out[:, idx]))
+        SE_out = torch.stack(se_out, dim=1)  # [b, S, c//S, 1, 1]
+        SE_out = SE_out.expand_as(SPC_out)   # [b, S, c//S, h, w]
+
+        # Softmax
+        softmax_out = self.softmax(SE_out)
+
+        # SPC * Attention ağırlığı
+        PSA_out = SPC_out * softmax_out
+        PSA_out = PSA_out.view(b, -1, h, w)
+
+        return PSA_out
 class GAM(nn.Module):
     def __init__(self, c1, c2=None, rate=4):
         super(GAM, self).__init__()

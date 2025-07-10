@@ -63,6 +63,7 @@ from .block import (
 )
 from .conv import (
     CBAM,
+    PSAPlug,
     GAM,
     SKAttention,
     SimAM,
@@ -119,6 +120,7 @@ __all__ = (
     "ChannelAttention",
     "SpatialAttention",
     "CBAM",
+    "PSAPlug",
     "GAM",
     "SKAttention",
     "SimAM",
