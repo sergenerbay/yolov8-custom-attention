@@ -12,8 +12,8 @@ As a baseline, the FLIR thermal dataset is used for evaluation and benchmarking.
 
 - ✅ **SKAttention** (implemented and tested)
 - ⏳ **CBAM** (coming soon)
-- ⏳ **PSA** (coming soon)
-- ⏳ **SimAM** (planned)
+- ✅ **PSA** (implemented and tested)
+- ✅ **SimAM** (implemented and tested)
 - ⏳ **GAM** (planned)
 - ⏳ **SE** (planned)
 
@@ -29,6 +29,15 @@ As a baseline, the FLIR thermal dataset is used for evaluation and benchmarking.
 - `[3, 5, 7]` — Multi-scale kernel sizes for spatial attention  
 - `16` — Channel reduction ratio in the attention block  
 
+---
+## ⚙️ Example Configuration Block with PSA
+
+```yaml
+- [-1, 1, PSAPlug, [1024,4]]
+```
+```
+- `1024` — Number of input/output channels  
+- `4` — Channel reduction ratio in the attention block  
 ---
 
 ## 🧪 Sample Training Script
