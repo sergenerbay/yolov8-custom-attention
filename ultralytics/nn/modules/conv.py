@@ -21,6 +21,8 @@ __all__ = (
     "ChannelAttention",
     "SpatialAttention",
     "CBAM",
+    "BiFPNCat2",
+    "BiFPNCat3"
     "PSAPlug",
     "SKAttention",
     "SimAM",
@@ -893,3 +895,103 @@ class Index(nn.Module):
             (torch.Tensor): Selected tensor.
         """
         return x[self.index]
+class BiFPNCat2(nn.Module):
+    """
+    BiFPNCat2 module for feature fusion in neural networks, used for two-scale feature extraction.
+
+    This module implements a feature pyramid network (FPN) architecture that combines features from different
+    resolutions using a top-down and bottom-up approach. It allows for efficient multi-scale feature extraction
+    and fusion, enhancing the model's ability to detect objects at various scales.
+
+    BiFPNCat2 模块用于神经网络中的特征融合，用于两种尺度的特征提取。
+
+    此模块实现了一种特征金字塔网络 (FPN) 架构，使用自上而下和自下而上的方法结合来自不同分辨率的特征。它允许高效的多尺度特征提取和融合，从而增强模型在各种尺度下检测对象的能力。
+    """
+
+    def __init__(self, cat_dimension=1):
+        """
+        Initialize BiFPNCat2 module.
+
+        初始化 BiFPNCat2 模块。
+
+        Args:
+            cat_dimension: Dimension along which to concatenate features, amd default is 1. 特征连接的维度，默认为 1。
+        """
+        super(BiFPNCat2, self).__init__()
+        # Initialize the module with the specified concatenation dimension.
+        # 使用指定的连接维度初始化模块。
+        self.d = cat_dimension
+        # Initialize the learnable weights for the concatenation operation.
+        # 初始化连接操作的可学习权重。
+        self.w = nn.Parameter(torch.ones(2, dtype=torch.float32), requires_grad=True)
+        # Set the eps value for numerical stability in the softmax operation.
+        # 设置软最大值操作的数值稳定性 eps 值。
+        self.eps = 0.001
+
+    def forward(self, x):
+        """
+        Forward pass through the BiFPNCat2 module.
+
+        通过 BiFPNCat2 模块执行前向传递。
+
+        Args:
+            x (torch.Tensor): Input tensor. 输入张量。
+
+        Returns:
+            (torch.Tensor): Output tensor after concatenation. 连接后的输出张量。
+        """
+        weight = self.w
+        normalised_weight = weight / (torch.sum(weight, dim=0) + self.eps)
+        y = [normalised_weight[0] * x[0], normalised_weight[1] * x[1]]
+        return torch.cat(y, dim=self.d)  # Concatenate the features along the specified dimension - 沿指定维度连接特征
+
+
+class BiFPNCat3(nn.Module):
+    """
+    BiFPNCat3 module for feature fusion in neural networks, used for three-scale feature extraction.
+
+    This module implements a feature pyramid network (FPN) architecture that combines features from different
+    resolutions using a top-down and bottom-up approach. It allows for efficient multi-scale feature extraction
+    and fusion, enhancing the model's ability to detect objects at various scales.
+
+    BiFPNCat3 模块用于神经网络中的特征融合，用于三种尺度的特征提取。
+
+    此模块实现了一种特征金字塔网络 (FPN) 架构，使用自上而下和自下而上的方法结合来自不同分辨率的特征。它允许高效的多尺度特征提取和融合，从而增强模型在各种尺度下检测对象的能力。
+    """
+
+    def __init__(self, cat_dimension=1):
+        """
+        Initialize BiFPNCat3 module.
+
+        初始化 BiFPNCat3 模块。
+
+        Args:
+            cat_dimension: Dimension along which to concatenate features, amd default is 1. 特征连接的维度，默认为 1。
+        """
+        super(BiFPNCat3, self).__init__()
+        # Initialize the module with the specified concatenation dimension.
+        # 使用指定的连接维度初始化模块。
+        self.d = cat_dimension
+        # Initialize the learnable weights for the concatenation operation.
+        # 初始化连接操作的可学习权重。
+        self.w = nn.Parameter(torch.ones(3, dtype=torch.float32), requires_grad=True)
+        # Set the eps value for numerical stability in the softmax operation.
+        # 设置软最大值操作的数值稳定性 eps 值。
+        self.eps = 0.001
+
+    def forward(self, x):
+        """
+        Forward pass through the BiFPNCat3 module.
+
+        通过 BiFPNCat3 模块执行前向传递。
+
+        Args:
+            x (torch.Tensor): Input tensor. 输入张量。
+
+        Returns:
+            (torch.Tensor): Output tensor after concatenation. 连接后的输出张量。
+        """
+        weight = self.w
+        normalised_weight = weight / (torch.sum(weight, dim=0) + self.eps)
+        y = [normalised_weight[0] * x[0], normalised_weight[1] * x[1], normalised_weight[2] * x[2]]
+        return torch.cat(y, dim=self.d)  # Concatenate the features along the specified dimension - 沿指定维度连接特征

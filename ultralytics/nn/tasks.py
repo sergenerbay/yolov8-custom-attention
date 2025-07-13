@@ -23,6 +23,8 @@ from ultralytics.nn.modules import (
     PSA,
     SPP,
     SPPELAN,
+    BiFPNCat2,
+    BiFPNCat3,
     SPPF,
     A2C2f,
     AConv,
@@ -1714,6 +1716,10 @@ def parse_model(d, ch, verbose=True):
                 legacy = False
         elif m is AIFI:
             args = [ch[f], *args]
+        elif m is BiFPNCat2:
+            c2 = sum(ch[x] for x in f)
+        elif m is BiFPNCat3:
+            c2 = sum(ch[x] for x in f)
         elif m in frozenset({HGStem, HGBlock}):
             c1, cm, c2 = ch[f], args[0], args[1]
             args = [c1, cm, c2, *args[2:]]

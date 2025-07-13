@@ -78,6 +78,8 @@ from .conv import (
     GhostConv,
     Index,
     LightConv,
+    BiFPNCat2,
+    BiFPNCat3,
     RepConv,
     SpatialAttention,
 )
@@ -189,4 +191,6 @@ __all__ = (
     "TorchVision",
     "Index",
     "A2C2f",
+    "BiFPNCat2",
+    "BiFPNCat3"
 )
