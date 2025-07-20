@@ -11,7 +11,7 @@ As a baseline, the FLIR thermal dataset is used for evaluation and benchmarking.
 ## ✅ Attention Modules Checklist
 
 - ✅ **SKAttention** (implemented and tested)
-- ⏳ **CBAM** (coming soon)
+- ✅ **CBAM** (implemented and tested)
 - ✅ **PSA** (implemented and tested)
 - ✅ **SimAM** (implemented and tested)
 - ⏳ **GAM** (planned)
