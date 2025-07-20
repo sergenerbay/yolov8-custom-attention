@@ -41,6 +41,7 @@ from .block import (
     C2f,
     C2fAttn,
     C2fCIB,
+    C2f_DWR,
     C2fPSA,
     C3Ghost,
     C3k2,
@@ -111,6 +112,7 @@ from .transformer import (
 
 __all__ = (
     "Conv",
+    "C2f_DWR",
     "Conv2",
     "LightConv",
     "RepConv",
@@ -186,6 +188,7 @@ __all__ = (
     "RepVGGDW",
     "CIB",
     "C2fCIB",
+
     "Attention",
     "PSA",
     "TorchVision",

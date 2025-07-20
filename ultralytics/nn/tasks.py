@@ -71,6 +71,7 @@ from ultralytics.nn.modules import (
     RTDETRDecoder,
     SCDown,
     Segment,
+    C2f_DWR,
     TorchVision,
     WorldDetect,
     YOLOEDetect,
@@ -1644,6 +1645,7 @@ def parse_model(d, ch, verbose=True):
             C3Ghost,
             torch.nn.ConvTranspose2d,
             DWConvTranspose2d,
+
             C3x,
             RepC3,
             PSA,
@@ -1654,6 +1656,7 @@ def parse_model(d, ch, verbose=True):
             PSAPlug,
             GAM,
             SKAttention,
+            C2f_DWR,
             SimAM,
         }
     )
@@ -1675,6 +1678,7 @@ def parse_model(d, ch, verbose=True):
             C2fCIB,
             C2PSA,
             A2C2f,
+            C2f_DWR,
         }
     )
     for i, (f, n, m, args) in enumerate(d["backbone"] + d["head"]):  # from, number, module, args

@@ -838,12 +838,16 @@ class BaseTrainer:
             nc = self.data.get("nc", 10)  # number of classes
             lr_fit = round(0.002 * 5 / (4 + nc), 6)  # lr0 fit equation to 6 decimal places
             name, lr, momentum = ("SGD", 0.01, 0.9) if iterations > 10000 else ("AdamW", lr_fit, 0.9)
+            print(name,lr,momentum)
             self.args.warmup_bias_lr = 0.0  # no higher than 0.01 for Adam
 
         for module_name, module in model.named_modules():
             for param_name, param in module.named_parameters(recurse=False):
                 fullname = f"{module_name}.{param_name}" if module_name else param_name
-                if "bias" in fullname:  # bias (no decay)
+                print(param_name)
+                if "channel_attention" in fullname or "spatial_attention" in fullname:
+                    print(fullname)
+                elif "bias" in fullname:  # bias (no decay)
                     g[2].append(param)
                 elif isinstance(module, bn) or "logit_scale" in fullname:  # weight (no decay)
                     # ContrastiveHead and BNContrastiveHead included here with 'logit_scale'
@@ -855,6 +859,7 @@ class BaseTrainer:
         name = {x.lower(): x for x in optimizers}.get(name.lower())
         if name in {"Adam", "Adamax", "AdamW", "NAdam", "RAdam"}:
             optimizer = getattr(optim, name, optim.Adam)(g[2], lr=lr, betas=(momentum, 0.999), weight_decay=0.0)
+            print(optimizer)
         elif name == "RMSProp":
             optimizer = optim.RMSprop(g[2], lr=lr, momentum=momentum)
         elif name == "SGD":
