@@ -36,7 +36,17 @@ As a baseline, the FLIR thermal dataset is used for evaluation and benchmarking.
 ```
 
 - `1024` — Number of input/output channels  
-- `4` — Channel reduction ratio in the attention block  
+- `4` — Channel reduction ratio in the attention block
+- 
+---
+## ⚙️ Example Configuration Block with PSA
+```yaml
+- [-1, 1, PSAPlug, [1024,4]]
+```
+
+- `1024` — Number of input/output channels  
+- `4` — Channel reduction ratio in the attention block
+- 
 ---
 
 ## 🧪 Sample Training Script
