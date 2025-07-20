@@ -37,7 +37,6 @@ As a baseline, the FLIR thermal dataset is used for evaluation and benchmarking.
 
 - `1024` — Number of input/output channels  
 - `4` — Channel reduction ratio in the attention block
-- 
 ---
 ## ⚙️ Example Configuration Block with CBAM
 ```yaml
@@ -46,7 +45,6 @@ As a baseline, the FLIR thermal dataset is used for evaluation and benchmarking.
 
 - `256` — Number of input/output channels  
 - `3` — Size of the convolutional kernel for spatial attention.
-- 
 ---
 
 ## 🧪 Sample Training Script
