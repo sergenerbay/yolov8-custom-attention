@@ -1,5 +1,5 @@
-ultralytics/cfg/models/v8/yolov8-bifpn.yaml
-ultralytics/cfg/models/v8/yolov8-psap2.yaml
-ultralytics/cfg/models/v8/yolov8-PSA.yaml
+ultralytics/cfg/models
+ultralytics/cfg/models
+ultralytics/cfg/models
 runs/
 script
