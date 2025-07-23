@@ -26,5 +26,5 @@
 from ultralytics import YOLO
 
 # Load a pretrained YOLO11n model
-model = YOLO("yolov8s-C2f-DWR.yaml")
+model = YOLO("yolov8s.yaml")
 model.train()
